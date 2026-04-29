@@ -1,0 +1,25 @@
+<h2>Busca de Mídia (Teste API)</h2>
+
+<form method="GET" action="{% url 'search_media' %}">
+    <input type="text" name="q" placeholder="Digite o nome do filme..." value="{{ query|default:'' }}">
+    <button type="submit">Buscar</button>
+</form>
+
+<hr>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for item in results %}
+        <div style="width: 200px; border: 1px solid #ccc; padding: 10px;">
+            {% if item.image_url %}
+                <img src="{{ item.image_url }}" alt="{{ item.title }}" style="width: 100%;">
+            {% endif %}
+            <h3>{{ item.title }}</h3>
+            <p><small>{{ item.release_date }}</small></p>
+            <button>Ver Detalhes / Avaliar</button>
+        </div>
+    {% empty %}
+        {% if query %}
+            <p>Nenhum resultado encontrado para "{{ query }}".</p>
+        {% endif %}
+    {% endfor %}
+</div>
