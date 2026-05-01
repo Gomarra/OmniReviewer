@@ -27,3 +27,18 @@ def search_tmdb_movies(query):
             })
         return formatted_results
     return []
+
+def get_movie_details_tmdb(movie_id):
+    url = f"{TMDB_BASE_URL}/movie/{movie_id}"
+    params = {'api_key': TMDB_API_KEY, 'language': 'pt-BR'}
+    response = requests.get(url, params=params)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            'title': data['title'],
+            'synopsis': data['overview'],
+            'release_date': data.get('release_date'),
+            'image_url': f"https://image.tmdb.org/t/p/w500{data['poster_path']}" if data['poster_path'] else None,
+        }
+    return None

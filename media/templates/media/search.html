@@ -15,7 +15,7 @@
             {% endif %}
             <h3>{{ item.title }}</h3>
             <p><small>{{ item.release_date }}</small></p>
-            <button>Ver Detalhes / Avaliar</button>
+            <a href="{% url 'media_detail' category=item.category external_id=item.external_id %}" style="text-decoration: none; background: #eee; padding: 5px; display: block; text-align: center;">Ver Detalhes</a>
         </div>
     {% empty %}
         {% if query %}

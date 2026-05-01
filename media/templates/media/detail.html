@@ -1,0 +1,32 @@
+<div style="display: flex; gap: 40px; padding: 20px; font-family: sans-serif;">
+    <div style="flex: 1; max-width: 300px;">
+        {% if media.image_url %}
+            <img src="{{ media.image_url }}" alt="{{ media.title }}" style="width: 100%; border-radius: 8px; shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        {% else %}
+            <div style="width: 100%; height: 450px; background: #eee; display: flex; align-items: center; justify-content: center;">Sem Imagem</div>
+        {% endif %}
+    </div>
+
+    <div style="flex: 2;">
+        <h1>{{ media.title }}</h1>
+        <p><strong>Tipo:</strong> {{ media.get_category_display }}</p>
+        <p><strong>Lançamento:</strong> {{ media.release_date|date:"d/m/Y" }}</p>
+        
+        <hr>
+        
+        <h3>Sinopse</h3>
+        <p style="line-height: 1.6; color: #333;">{{ media.synopsis }}</p>
+
+        <hr>
+
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px;">
+            <h4>Avaliação da Comunidade</h4>
+            <p style="font-size: 1.2em; font-weight: bold; color: #2ecc71;">
+                {{ media.get_approval_rating }}
+            </p>
+            <button style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Escrever uma Review
+            </button>
+        </div>
+    </div>
+</div>
