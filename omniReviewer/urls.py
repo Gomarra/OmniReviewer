@@ -26,6 +26,7 @@ urlpatterns = [
     path('registrar/', user_views.registrar, name='registrar'),
     path('login/', auth_views.LoginView.as_view(template_name='conta/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='conta/logout.html'), name='logout'),
+    path('reviews/', include('review.urls')),
     path('media/', include('media.urls')),
     path('', views.paginaHome, name='home'),
 ]

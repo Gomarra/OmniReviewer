@@ -20,13 +20,36 @@
         <hr>
 
         <div style="background: #f9f9f9; padding: 15px; border-radius: 8px;">
-            <h4>Avaliação da Comunidade</h4>
-            <p style="font-size: 1.2em; font-weight: bold; color: #2ecc71;">
-                {{ media.get_approval_rating }}
-            </p>
-            <button style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Escrever uma Review
-            </button>
+            <hr>
+            <h3>Reviews da Comunidade</h3>
+
+            {% for review in media.reviews.all %}
+                <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                    <strong>{{ review.author.username }}</strong> 
+                    <span style="color: {% if review.recommended %}#2ecc71{% else %}#e74c3c{% endif %};">
+                        {% if review.recommended %} (Recomendado) {% else %} (Não Recomendado) {% endif %}
+                    </span>
+                    <p>{{ review.content }}</p>
+                    <small style="color: #888;">Postado em: {{ review.created_at|date:"d/m/Y" }}</small>
+                </div>
+            {% empty %}
+                <p>Ainda não há reviews para esta mídia. Seja o primeiro!</p>
+            {% endfor %}
+
+            <hr>
+
+            {% if user.is_authenticated %}
+                <h4>Deixe sua avaliação:</h4>
+                <form method="POST" action="{% url 'add_review' media.id %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Publicar Review
+                    </button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'login' %}">Faça login</a> para escrever uma review.</p>
+            {% endif %}
         </div>
     </div>
 </div>

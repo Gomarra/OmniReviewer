@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+
+from review.forms import ReviewForm
 from .models import Media
 from .services import search_tmdb_movies, get_movie_details_tmdb # Vamos criar essa função
 
@@ -29,4 +31,4 @@ def media_detail(request, category, external_id):
                     external_id=external_id
                 )
 
-    return render(request, 'media/detail.html', {'media': media})
+    return render(request, 'media/detail.html', {'media': media, 'form': ReviewForm()})
