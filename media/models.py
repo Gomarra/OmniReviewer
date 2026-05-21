@@ -23,7 +23,7 @@ class Media(models.Model):
         if total_reviews == 0:
             return "Sem avaliações"
         
-        positive_review = self.review.filter(is_approved=True, recommended=True).count()
+        positive_review = self.reviews.filter(is_approved=True, recommended=True).count()
         percentage = (positive_review / total_reviews) * 100
 
         if percentage >= 90: return f"Fortemente recomendado ({percentage:.0f}%)"

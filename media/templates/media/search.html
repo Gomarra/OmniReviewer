@@ -1,7 +1,14 @@
 <h2>Busca de Mídia (Teste API)</h2>
 
 <form method="GET" action="{% url 'search_media' %}">
-    <input type="text" name="q" placeholder="Digite o nome do filme..." value="{{ query|default:'' }}">
+    <input type="text" name="q" placeholder="O que você está procurando?" value="{{ query|default:'' }}">
+    
+    <select name="category">
+        <option value="">Todas as Mídias</option>
+        <option value="MOVIE" {% if category_filter == 'MOVIE' %}selected{% endif %}>Filmes</option>
+        <option value="GAME" {% if category_filter == 'GAME' %}selected{% endif %}>Jogos</option>
+    </select>
+    
     <button type="submit">Buscar</button>
 </form>
 

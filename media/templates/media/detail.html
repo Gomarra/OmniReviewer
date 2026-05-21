@@ -1,7 +1,7 @@
 <div style="display: flex; gap: 40px; padding: 20px; font-family: sans-serif;">
     <div style="flex: 1; max-width: 300px;">
         {% if media.image_url %}
-            <img src="{{ media.image_url }}" alt="{{ media.title }}" style="width: 100%; border-radius: 8px; shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <img src="{{ media.image_url }}" alt="{{ media.title }}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         {% else %}
             <div style="width: 100%; height: 450px; background: #eee; display: flex; align-items: center; justify-content: center;">Sem Imagem</div>
         {% endif %}
@@ -21,14 +21,28 @@
 
         <div style="background: #f9f9f9; padding: 15px; border-radius: 8px;">
             <hr>
-            <h3>Reviews da Comunidade</h3>
+            <h3>Reviews da Comunidade:</h3>
+            
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5em; font-weight: bold; color: #28a745;">
+                    {{ media.get_approval_rating }}
+            </span>
+            </div>
+
+            <div>
+                <small style="color: #6c757d;">
+                Baseado em {{ media.reviews.count }} avaliações de usuários.
+                </small>
+            </div>
 
             {% for review in media.reviews.all %}
                 <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
                     <strong>{{ review.author.username }}</strong> 
-                    <span style="color: {% if review.recommended %}#2ecc71{% else %}#e74c3c{% endif %};">
-                        {% if review.recommended %} (Recomendado) {% else %} (Não Recomendado) {% endif %}
-                    </span>
+                    {% if review.recommended %}
+                        <span style="color: #2ecc71;"> (Recomendado) </span>
+                    {% else %}
+                        <span style="color: #e74c3c;"> (Não Recomendado) </span>
+                    {% endif %}
                     <p>{{ review.content }}</p>
                     <small style="color: #888;">Postado em: {{ review.created_at|date:"d/m/Y" }}</small>
                 </div>

@@ -4,8 +4,9 @@ from media.models import Media  # Importando o modelo do outro app
 
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    # Certifique-se de que o related_name seja 'reviews'
     media = models.ForeignKey('media.Media', on_delete=models.CASCADE, related_name='reviews')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     content = models.TextField()
     recommended = models.BooleanField(default=True)
