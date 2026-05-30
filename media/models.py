@@ -30,3 +30,12 @@ class Media(models.Model):
         elif percentage >= 70: return f"Recomendado ({percentage:.0f}%)"
         elif percentage >= 50: return f"Misto ({percentage:.0f}%)"
         else: return f"Não recomendado ({percentage:.0f}%)"
+    
+    def get_approval_percentage(self):
+        # """Retorna apenas o número da porcentagem (0 a 100) ou None se não houver avaliações"""
+        total_reviews = self.reviews.filter(is_approved=True).count()
+        if total_reviews == 0:
+            return None
+        
+        positive_reviews = self.reviews.filter(is_approved=True, recommended=True).count()
+        return (positive_reviews / total_reviews) * 100

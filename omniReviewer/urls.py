@@ -18,8 +18,9 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views # Views prontas de login
 from django.urls import include, path
 from conta import views as user_views
+from django.conf.urls.static import static
 
-from omniReviewer import views
+from omniReviewer import settings, views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='conta/logout.html'), name='logout'),
     path('reviews/', include('review.urls')),
     path('media/', include('media.urls')),
+    path('', include('conta.urls')),
     path('', views.paginaHome, name='home'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

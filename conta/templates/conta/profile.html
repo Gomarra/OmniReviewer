@@ -1,0 +1,40 @@
+<div style="max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 20px;">
+    <div style="display: flex; gap: 30px; align-items: center; background: #f8f9fa; padding: 20px; border-radius: 10px;">
+        <img src="{{ user.profile.image.url }}" alt="Foto de Perfil" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #3498db;">
+        <div>
+            <h2>{{ user.username }}</h2>
+            <p style="color: #6c757d;">{{ user.email }}</p>
+            <p><strong>Sobre mim:</strong> {% if user.profile.bio %}{{ user.profile.bio }}{% else %}<span style="color:#aaa; font-style:italic;">Nenhuma biografia adicionada.</span>{% endif %}</p>
+        </div>
+    </div>
+
+    <hr style="margin: 30px 0;">
+
+    <h3>Minhas Avaliações</h3>
+    {% for r in reviews %}
+        <div style="border: 1px solid #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; position: relative;">
+            <strong>{{ r.media.title }}</strong> 
+            <span style="color: {% if r.recommended %}#28a745{% else %}#dc3545{% endif %}; font-weight: bold;">
+                {% if r.recommended %}(Recomendado){% else %}(Não Recomendado){% endif %}
+            </span>
+            <p style="margin: 10px 0; color: #333;">{{ r.content }}</p>
+            <small style="color: #888; display: block; margin-bottom: 10px;">Postado em: {{ r.created_at|date:"d/m/Y H:i" }}</small>
+            
+            <a href="{% url 'edit_review' r.id %}" style="display: inline-block; padding: 5px 10px; background: #f1f3f5; color: #495057; text-decoration: none; border-radius: 4px; font-size: 0.9em; border: 1px solid #ced4da;">Editar Opinião</a>
+        </div>
+    {% empty %}
+        <p style="color: #888;">Você ainda não fez nenhuma avaliação.</p>
+    {% endfor %}
+
+    <hr style="margin: 30px 0;">
+
+    <h3>Editar Informações do Perfil</h3>
+    <form method="POST" enctype="multipart/form-data" style="background: #fff; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px;">
+        {% csrf_token %}
+        <h4>Dados da Conta</h4>
+        {{ u_form.as_p }}
+        <h4 style="margin-top: 20px;">Personalização</h4>
+        {{ p_form.as_p }}
+        <button type="submit" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;">Salvar Alterações</button>
+    </form>
+</div>

@@ -24,9 +24,29 @@
             <h3>Reviews da Comunidade:</h3>
             
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5em; font-weight: bold; color: #28a745;">
-                    {{ media.get_approval_rating }}
-            </span>
+                {% with percentage=media.get_approval_percentage %}
+                    {% if percentage is not None %}
+                        
+                        {% if percentage <= 49 %}
+                            <span style="font-size: 1.5em; font-weight: bold; color: #dc3545;">
+                                {{ media.get_approval_rating }}
+                            </span>
+                        {% elif percentage == 50 %}
+                            <span style="font-size: 1.5em; font-weight: bold; color: #d4a373;">
+                                {{ media.get_approval_rating }}
+                            </span>
+                        {% else %}
+                            <span style="font-size: 1.5em; font-weight: bold; color: #28a745;">
+                                {{ media.get_approval_rating }}
+                            </span>
+                        {% endif %}
+
+                    {% else %}
+                        <span style="font-size: 1.5em; font-weight: bold; color: #6c757d;">
+                            {{ media.get_approval_rating }}
+                        </span>
+                    {% endif %}
+                {% endwith %}
             </div>
 
             <div>
