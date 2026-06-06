@@ -12,6 +12,22 @@
         <p><strong>Tipo:</strong> {{ media.get_category_display }}</p>
         <p><strong>Lançamento:</strong> {{ media.release_date|date:"d/m/Y" }}</p>
         
+        {% if user.is_authenticated %}
+        <div style="margin: 15px 0;">
+            <form method="POST" action="{% url 'update_list_status' media.id %}">
+                {% csrf_token %}
+                <label for="status" style="font-weight: bold; margin-right: 10px;">Status da Mídia:</label>
+                <select name="status" id="status" onchange="this.form.submit()" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="">-- Adicionar à uma lista --</option>
+                    <option value="PLAN_TO" {% if current_status == 'PLAN_TO' %}selected{% endif %}>Quero Ver/Ler</option>
+                    <option value="WATCHING" {% if current_status == 'WATCHING' %}selected{% endif %}>Assistindo/Lendo</option>
+                    <option value="COMPLETED" {% if current_status == 'COMPLETED' %}selected{% endif %}>Concluído</option>
+                    <option value="DROPPED" {% if current_status == 'DROPPED' %}selected{% endif %}>Abandonado</option>
+                </select>
+            </form>
+        </div>
+        {% endif %}
+
         <hr>
         
         <h3>Sinopse</h3>

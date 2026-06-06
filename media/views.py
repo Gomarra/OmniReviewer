@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 from review.forms import ReviewForm
-from .models import Media
+from .models import Media, UserList
+from django.contrib.auth.decorators import login_required
 from .services import get_game_details_igdb, search_igdb_games, search_tmdb_movies, get_movie_details_tmdb
 
 def search_media(request):
@@ -44,6 +45,34 @@ def media_detail(request, category, external_id):
                 external_id=external_id
             )
 
-    # Lembre-se de passar o ReviewForm no contexto para o formulário de review aparecer!
-    from review.forms import ReviewForm
-    return render(request, 'media/detail.html', {'media': media, 'form': ReviewForm()})
+    current_status = None
+    if request.user.is_authenticated and media:
+        user_list_item = UserList.objects.filter(user=request.user, media=media).first()
+        if user_list_item:
+            current_status = user_list_item.status
+
+    return render(request, 'media/detail.html', {
+    'media': media, 
+    'form': ReviewForm(),
+    'current_status': current_status # Passa o status atual para o HTML
+})
+
+@login_required
+def update_list_status(request, media_id):
+    if request.method == 'POST':
+        media = get_object_or_404(Media, id=media_id)
+        status = request.POST.get('status')
+        
+        if status:
+            # Atualiza o registro se já existir ou cria um novo
+            UserList.objects.update_or_create(
+                user=request.user,
+                media=media,
+                defaults={'status': status}
+            )
+        else:
+            # Se o usuário escolher uma opção em branco/remover, deleta o registro
+            UserList.objects.filter(user=request.user, media=media).delete()
+            
+        return redirect('media_detail', category=media.category, external_id=media.external_id)
+    return redirect('media_index')

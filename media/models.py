@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Media(models.Model):
     CATEGORY_CHOICES = [
@@ -39,3 +40,22 @@ class Media(models.Model):
         
         positive_reviews = self.reviews.filter(is_approved=True, recommended=True).count()
         return (positive_reviews / total_reviews) * 100
+    
+class UserList(models.Model):
+    STATUS_CHOICES = [
+        ('WATCHING', 'Assistindo/Lendo'),
+        ('PLAN_TO', 'Quero Ver/Ler'),
+        ('COMPLETED', 'Concluído'),
+        ('DROPPED', 'Abandonado'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='my_lists')
+    media = models.ForeignKey('Media', on_delete=models.CASCADE, related_name='listed_by')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'media') # Impede duplicar a mesma mídia na lista do usuário
+
+    def __str__(self):
+        return f"{self.user.username} - {self.media.title} ({self.get_status_display()})"
