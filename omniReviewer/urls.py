@@ -29,6 +29,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='conta/logout.html'), name='logout'),
     path('reviews/', include('review.urls')),
     path('media/', include('media.urls')),
-    path('', include('conta.urls')),
+    path('profile/', include('conta.urls')),
     path('', views.paginaHome, name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from media.models import UserList
 from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from .models import Profile
 from review.models import Review
-from review.forms import ReviewForm
+from django.contrib.auth.models import User
 
 def registrar(request):
     if request.method == 'POST':
@@ -35,12 +37,42 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=profile)
 
-    # Busca as últimas reviews feitas por este usuário
+    # Organiza as listas por status para o usuário logado
+    user_lists = UserList.objects.filter(user=request.user).select_related('media')
+    
+    listas_organizadas = {
+        'PLAN_TO': [item.media for item in user_lists if item.status == 'PLAN_TO'],
+        'WATCHING': [item.media for item in user_lists if item.status == 'WATCHING'],
+        'COMPLETED': [item.media for item in user_lists if item.status == 'COMPLETED'],
+        'DROPPED': [item.media for item in user_lists if item.status == 'DROPPED'],
+    }
+
     user_reviews = Review.objects.filter(author=request.user).order_by('-created_at')
 
     context = {
         'u_form': u_form,
         'p_form': p_form,
+        'listas': listas_organizadas,
         'reviews': user_reviews
     }
     return render(request, 'conta/profile.html', context)
+
+def public_profile(request, username):
+    """Exibe o perfil para outros usuários (sem formulários de edição)"""
+    person = get_object_or_404(User, username=username)
+    user_lists = UserList.objects.filter(user=person).select_related('media')
+    
+    listas_organizadas = {
+        'PLAN_TO': [item.media for item in user_lists if item.status == 'PLAN_TO'],
+        'WATCHING': [item.media for item in user_lists if item.status == 'WATCHING'],
+        'COMPLETED': [item.media for item in user_lists if item.status == 'COMPLETED'],
+        'DROPPED': [item.media for item in user_lists if item.status == 'DROPPED'],
+    }
+    
+    reviews = Review.objects.filter(author=person, is_approved=True).order_by('-created_at')
+
+    return render(request, 'conta/public_profile.html', {
+        'person': person,
+        'listas': listas_organizadas,
+        'reviews': reviews
+    })

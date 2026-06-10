@@ -73,7 +73,7 @@
 
             {% for review in media.reviews.all %}
                 <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                    <strong>{{ review.author.username }}</strong> 
+                    <strong> <a href = {% url 'public_profile' username=review.author.username %} >{{ review.author.username }}</a></strong> 
                     {% if review.recommended %}
                         <span style="color: #2ecc71;"> (Recomendado) </span>
                     {% else %}
