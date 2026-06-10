@@ -1,14 +1,46 @@
-<h3>Home page</h3>
-<div>
-    <a href="profile/">
-        <button type="submit" style="padding: 10px 20px; background: #2730ae; color: white; border: none; border-radius: 5px; cursor: pointer;">Perfil</button>
-    </a>
+<div style="max-width: 1000px; margin: 0 auto; font-family: sans-serif; padding: 20px;">
+    
+    <div style="text-align: center; background: #2c3e50; color: white; padding: 40px; border-radius: 10px; margin-bottom: 30px;">
+        <h1 style="margin-0;">OmniReviewer</h1>
+        <p style="color: #bdc3c7;">Descubra o que a comunidade está achando de filmes e jogos</p>
+        
+        <form method="GET" action="{% url 'search_media' %}" style="margin-top: 20px;">
+            <input type="text" name="q" placeholder="Pesquise um filme ou jogo..." style="padding: 10px; width: 50%; border: none; border-radius: 4px 0 0 4px; font-size: 1em;">
+            <button type="submit" style="padding: 10px 20px; background: #e67e22; color: white; border: none; border-radius: 0 4px 4px 0; font-size: 1em; cursor: pointer; font-weight: bold;">Buscar</button>
+        </form>
+    </div>
 
-    <space>
+    <h2>🔥 Mais Recomendados da Comunidade</h2>
+    <p style="color: #7f8c8d; margin-bottom: 20px;">Títulos com mais de 70% de aprovação dos usuários:</p>
 
-    <div>
-        <a href="media/search">
-            <button type="submit" style="padding: 10px 20px; background: #2730ae; color: white; border: none; border-radius: 5px; cursor: pointer;">Pesquise media</button>
-        </a>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+        
+        {% for item in lista_recomendados %}
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; background: #fff;">
+                
+                {% if item.objeto.image_url %}
+                    <img src="{{ item.objeto.image_url }}" alt="{{ item.objeto.title }}" style="width: 100%; height: 280px; object-fit: cover; border-radius: 4px;">
+                {% else %}
+                    <div style="width: 100%; height: 280px; background: #eee; display: flex; align-items: center; justify-content: center; color: #888;">Sem Capa</div>
+                {% endif %}
+
+                <h4 style="margin: 10px 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ item.objeto.title }}
+                </h4>
+                
+                <span style="font-size: 0.8em; background: #ecf0f1; padding: 2px 8px; border-radius: 10px; color: #7f8c8d;">
+                    {{ item.objeto.get_category_display }}
+                </span>
+
+                <div style="margin-top: 10px; font-weight: bold; color: #27ae60; font-size: 1.1em;">
+                    {{ item.porcentagem }}% de aprovação
+                </div>
+
+                <a href="{% url 'media_detail' item.objeto.category item.objeto.external_id %}" style="display: block; margin-top: 15px; text-decoration: none; background: #3498db; color: white; padding: 8px; border-radius: 4px; font-size: 0.9em; font-weight: bold;">Ver Avaliações</a>
+            </div>
+        {% empty %}
+            <p style="color: #95a5a6; grid-column: 1 / -1;">Nenhuma mídia foi avaliada com notas altas ainda. Seja o primeiro a criar uma review!</p>
+        {% endfor %}
+
     </div>
 </div>

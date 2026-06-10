@@ -30,5 +30,5 @@ urlpatterns = [
     path('reviews/', include('review.urls')),
     path('media/', include('media.urls')),
     path('profile/', include('conta.urls')),
-    path('', views.paginaHome, name='home'),
+    path('', views.paginaInicial, name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
