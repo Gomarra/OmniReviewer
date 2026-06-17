@@ -1,3 +1,14 @@
+{% if messages %}
+    <div style="margin-bottom: 20px;">
+        {% for message in messages %}
+            <div style="padding: 15px; border-radius: 4px; font-family: sans-serif; font-weight: bold;
+                        {% if message.tags == 'warning' %} background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; {% else %} background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <div style="display: flex; gap: 40px; padding: 20px; font-family: sans-serif;">
     <div style="flex: 1; max-width: 300px;">
         {% if media.image_url %}

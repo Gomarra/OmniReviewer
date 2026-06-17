@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from media.models import Media
 from review.models import Review
 from .forms import ReviewForm
+from .filtro import FiltroPalavroes
 
 @login_required # Garante que apenas usuários logados comentem (RF 001)
 def add_review(request, media_id):
@@ -14,9 +15,14 @@ def add_review(request, media_id):
             review = form.save(commit=False)
             review.author = request.user # Define o autor (RF 003)
             review.media = media # Vincula à mídia atual
-            
-            # Lógica de Filtro de Conteúdo (RF 010)
-            # Por enquanto, salvamos direto. No futuro, adicionamos a verificação automática aqui.
+
+            if FiltroPalavroes.has_palavroes(review.content):
+                review.is_approved = False
+                messages.warning(request, 'Sua review foi enviada, mas passará por análise dos moderadores devido aos termos utilizados.')
+            else:
+                review.is_approved = True
+                messages.success(request, 'Review publicada com sucesso!')
+
             review.save()
             
             return redirect('media_detail', category=media.category, external_id=media.external_id)
