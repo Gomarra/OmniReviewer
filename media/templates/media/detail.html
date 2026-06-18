@@ -78,21 +78,21 @@
 
             <div>
                 <small style="color: #6c757d;">
-                Baseado em {{ media.reviews.count }} avaliações de usuários.
+                Baseado em {{ media.approved_reviews_count }} avaliações de usuários.
                 </small>
             </div>
 
-            {% for review in media.reviews.all %}
-                <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                    <strong> <a href = {% url 'public_profile' username=review.author.username %} >{{ review.author.username }}</a></strong> 
-                    {% if review.recommended %}
-                        <span style="color: #2ecc71;"> (Recomendado) </span>
-                    {% else %}
-                        <span style="color: #e74c3c;"> (Não Recomendado) </span>
-                    {% endif %}
-                    <p>{{ review.content }}</p>
-                    <small style="color: #888;">Postado em: {{ review.created_at|date:"d/m/Y" }}</small>
-                </div>
+            {% for review in media.approved_reviews %}
+                    <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                        <strong> <a href = {% url 'public_profile' username=review.author.username %} >{{ review.author.username }}</a></strong> 
+                        {% if review.recommended %}
+                            <span style="color: #2ecc71;"> (Recomendado) </span>
+                        {% else %}
+                            <span style="color: #e74c3c;"> (Não Recomendado) </span>
+                        {% endif %}
+                        <p>{{ review.content }}</p>
+                        <small style="color: #888;">Postado em: {{ review.created_at|date:"d/m/Y" }}</small>
+                    </div>
             {% empty %}
                 <p>Ainda não há reviews para esta mídia. Seja o primeiro!</p>
             {% endfor %}
