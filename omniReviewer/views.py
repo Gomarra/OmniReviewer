@@ -29,4 +29,4 @@ def paginaInicial(request):
     midias_populares = sorted(midias_populares, key=lambda x: x['porcentagem'], reverse=True)[:6]
 
     # 4. Entregamos o resultado para o arquivo HTML dentro de um "Dicionário" (Contexto)
-    return render(request, 'omniReviewer/home.html', {'lista_recomendados': midias_populares})
+    return render(request, 'home.html', {'lista_recomendados': midias_populares})

@@ -35,7 +35,7 @@ pip-delete-this-directory.txt
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-/Media/
+/Media/pfp/profile_pics/
 /static/
 staticfiles/
 
@@ -90,3 +90,5 @@ coverage.xml
 *.orig
 .vscode-remote/
 .devcontainer/
+
+!Media/pfp/default.png
